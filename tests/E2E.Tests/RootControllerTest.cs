@@ -32,8 +32,10 @@ public class ConvertPdfTest
         var response = await _client.PostAsync("/", new StreamContent(GetResourceStream("CS_cheat_sheet.pdf")));
         Assert.Multiple(async () =>
         {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(await response.Content.ReadAsStreamAsync(), Is.EqualTo(GetResourceStream("CS_cheat_sheet.html")));
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                () => $"Conversion failed: {new StreamReader(responseStream).ReadToEnd()}");
+            Assert.That(responseStream, Is.EqualTo(GetResourceStream("CS_cheat_sheet.html")));
         });
     }
 
