@@ -3,7 +3,7 @@ using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 
-namespace pdf2html.Controllers;
+namespace Pdf2Html.Controllers;
 
 [ApiController]
 [Route("/")]
@@ -35,9 +35,11 @@ public class RootController : ControllerBase
         var outputFile = $"{inputFile}.html";
         try
         {
-            await using var tempFileStream = System.IO.File.Open(inputFile, FileMode.Truncate);
-            await Request.Body.CopyToAsync(tempFileStream);
-            _logger.LogInformation($"Copied {FormatToMb(new FileInfo(inputFile).Length)} to {inputFile}");
+            await using (var tempFileStream = System.IO.File.Open(inputFile, FileMode.Truncate))
+            {
+                await Request.Body.CopyToAsync(tempFileStream);
+                _logger.LogInformation($"Copied {FormatToMb(new FileInfo(inputFile).Length)} to {inputFile}");
+            }
 
             _logger.LogInformation("Starting conversion...");
             var (success, logs) = await ConvertAsync(inputFile, outputFile);
@@ -56,7 +58,6 @@ public class RootController : ControllerBase
             System.IO.File.Delete(inputFile);
             System.IO.File.Delete(outputFile);
         }
-
     }
 
     private async Task<(bool Success, ICollection<string> logs)> ConvertAsync(string inputFile, string outputFile)

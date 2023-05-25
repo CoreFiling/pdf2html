@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>1.0.0</Version>
+    <AssemblyName>Pdf2html</AssemblyName>
+    <RootNamespace>Pdf2html</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
