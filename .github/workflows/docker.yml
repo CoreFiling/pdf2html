@@ -27,12 +27,12 @@ jobs:
           context: ./src/Pdf2Html
           load: true
           tags: ${{ env.TEST_TAG }}
-      - name: Set up Dotnet
+      - name: Set up dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.x"
       - name: E2E tests
         run: |
           docker run --rm --detach -p 8080:8080 --name pdf2html ${{ env.TEST_TAG }}
-          dotnet test
+          dotnet test --filter "FullyQualifiedName=E2E.Tests"
           docker stop pdf2html
