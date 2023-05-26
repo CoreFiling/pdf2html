@@ -16,7 +16,6 @@ public class RootController : ControllerBase
         _logger = logger;
     }
 
-
     [HttpGet]
     public ActionResult Get()
     {
