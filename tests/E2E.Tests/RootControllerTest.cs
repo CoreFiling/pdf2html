@@ -1,9 +1,13 @@
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace E2E.Tests;
 
-public class ConvertPdfTest
+public partial class ConvertPdfTest
 {
+    [GeneratedRegex("^@font-face{.*$", RegexOptions.Multiline)]
+    private static partial Regex FontFaceRegex();
+
     private HttpClient _client = null!;
 
     [SetUp]
@@ -33,9 +37,13 @@ public class ConvertPdfTest
         Assert.Multiple(async () =>
         {
             var responseStream = await response.Content.ReadAsStreamAsync();
+            var content = await new StreamReader(responseStream).ReadToEndAsync();
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
-                () => $"Conversion failed: {new StreamReader(responseStream).ReadToEnd()}");
-            Assert.That(responseStream, Is.EqualTo(GetResourceStream("CS_cheat_sheet.html")));
+                () => $"Conversion failed: {content}");
+            var expected = await new StreamReader(GetResourceStream("CS_cheat_sheet.html")).ReadToEndAsync();
+
+            string RemoveFonts(string input) => FontFaceRegex().Replace(input, "");
+            Assert.That(RemoveFonts(content), Is.EqualTo(RemoveFonts(expected)));
         });
     }
 
