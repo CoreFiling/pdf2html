@@ -38,6 +38,7 @@ public class RootController : ControllerBase
             await using (var tempFileStream = System.IO.File.Open(inputFile, FileMode.Truncate))
             {
                 await Request.Body.CopyToAsync(tempFileStream);
+                await tempFileStream.FlushAsync();
                 _logger.LogInformation($"Copied {FormatToMb(new FileInfo(inputFile).Length)} to {inputFile}");
             }
 
