@@ -62,7 +62,7 @@ public class RootController : ControllerBase
     private async Task<(bool Success, ICollection<string> logs)> ConvertAsync(string inputFile, string outputFile)
     {
         using var p = new Process();
-        const string conversionOptions = "--embed-javascript=0 --process-outline=0 --printing=0 --bg-format=svg";
+        const string conversionOptions = "--embed-javascript=0 --process-outline=0 --printing=0 --bg-format=svg --fallback=1";
         p.StartInfo = new ProcessStartInfo
         {
             FileName = "pdf2htmlEX",
