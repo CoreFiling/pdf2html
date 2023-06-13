@@ -28,6 +28,7 @@ public class RootController : ControllerBase
     }
 
     [HttpPost]
+    [DisableRequestSizeLimit]
     public async Task<ActionResult> Post()
     {
         var inputFile = Path.GetTempFileName();
