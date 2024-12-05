@@ -1,0 +1,5 @@
+@@ -21,3 +21,4 @@
+   libpng-dev                     \
+   libjpeg-dev                    \
+   libxml2-dev                    \
++  libopenjp2-7-dev		          \

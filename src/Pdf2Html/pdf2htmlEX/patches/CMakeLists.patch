@@ -1,0 +1,8 @@
+@@ -97,6 +97,7 @@
+   ${LIB_INTL_LIBRARIES}
+   ${CAIRO_LIBRARIES}
+   -ljpeg
++  -lopenjp2
+   -lpng
+   -lfontconfig
+   -lfreetype
