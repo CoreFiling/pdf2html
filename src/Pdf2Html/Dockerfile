@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-pdf2htmlex
+FROM ubuntu:noble AS build-pdf2htmlex
 
 # Produces a patched pdf2htmlEX using libopenjp 2.7 instead of libjpeg to get JPEG2000 support.
 
@@ -26,6 +26,8 @@ RUN ./buildScripts/reportEnvs
 RUN ./buildScripts/getBuildToolsApt
 RUN ./buildScripts/getDevLibrariesApt
 RUN ./buildScripts/getPoppler
+RUN patch ./poppler/glib/poppler-enums.c.template ./patches/poppler-enums.c.template.patch
+RUN patch ./poppler/glib/poppler-private.h ./patches/poppler-private.h.patch
 RUN ./buildScripts/buildPoppler
 RUN ./buildScripts/getFontforge
 RUN ./buildScripts/buildFontforge
@@ -35,12 +37,12 @@ RUN git config user.name "CoreFiling"
 RUN git config user.email "opensource@corefiling.com"
 RUN ./buildScripts/createDebianPackage
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-noble AS build
 WORKDIR /source
 COPY ./ .
 RUN dotnet publish -c release -o /app
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble
 RUN apt update && apt install -y wget
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb
 RUN apt install -y ./libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb
