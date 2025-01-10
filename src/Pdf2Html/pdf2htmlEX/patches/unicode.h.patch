@@ -1,0 +1,19 @@
+@@ -39,9 +39,6 @@ namespace pdf2htmlEX {
+  * moz:
+  * p2h:         [------------------]            [-]           [-]          [-----------------]
+  *
+- * Note: 0xA0 (no-break space) affects word-spacing; and if "white-space:pre" is specified,
+- * \n and \r can break line, \t can shift text, so they are considered illegal.
+- *
+  * Resources (retrieved at 2015-03-16)
+  * * webkit
+  *   * Avoid querying the font cache for the zero-width space glyph ( https://bugs.webkit.org/show_bug.cgi?id=90673 )
+@@ -58,7 +55,7 @@ namespace pdf2htmlEX {
+  */
+ inline bool is_illegal_unicode(Unicode c)
+ {
+-    return (c < 0x20) || (c >= 0x7F && c <= 0xA0) || (c == 0xAD)
++    return (c < 0x20) || (c >= 0x7F && c < 0xA0) || (c == 0xAD)
+             || (c >= 0x300 && c <= 0x36f) // DCRH Combining diacriticals
+             || (c >= 0x1ab0 && c <= 0x1aff) // DCRH Combining diacriticals
+             || (c >= 0x1dc0 && c <= 0x1dff) // DCRH Combining diacriticals
