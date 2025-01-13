@@ -19,6 +19,7 @@ RUN patch ./buildScripts/versionEnvs ./patches/versionEnvs.patch
 RUN patch ./buildScripts/buildPoppler ./patches/buildPoppler.patch
 RUN patch ./buildScripts/getBuildToolsApt ./patches/getBuildToolsApt.patch
 RUN patch ./buildScripts/getDevLibrariesApt ./patches/getDevLibrariesApt.patch
+RUN patch ./pdf2htmlEX/src/util/unicode.cc ./patches/unicode.cc.patch
 RUN patch ./pdf2htmlEX/src/util/unicode.h ./patches/unicode.h.patch
 RUN patch ./pdf2htmlEX/CMakeLists.txt ./patches/CMakeLists.patch
 
