@@ -1,8 +1,8 @@
-using Pdf2Html.Controllers;
+using Pdf2Html.Settings;
 
 namespace Unit.Tests;
 
-public class RootControllerTest
+public class ConversionOptionsTests
 {
     [Test]
     public void TestToCommandLineArguments()
@@ -14,7 +14,7 @@ public class RootControllerTest
             { "ConversionOptions:Hello", "World!" },
             { "ConversionOptions:FizzBuzz", "5" },
         };
-        var result = RootController.ToCommandLineArguments(input);
+        var result = ConversionOptions.ToCommandLineArguments(input);
         Assert.That(result, Is.EqualTo("--foo-bar=1 --baz-blort=0 --hello=World! --fizz-buzz=5"));
     }
 }

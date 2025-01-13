@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using System.Net.Mime;
 using System.Reflection;
-using System.Text.RegularExpressions;
+
 using Microsoft.AspNetCore.Mvc;
+
+using Pdf2Html.Settings;
 
 namespace Pdf2Html.Controllers;
 
 [ApiController]
 [Route("/")]
-public class RootController(ILogger<RootController> logger, IConfiguration configuration) : ControllerBase
+public class RootController(ILogger<RootController> logger, ConversionOptions conversionOptions) : ControllerBase
 {
     [HttpGet]
     public ActionResult Get()
@@ -57,11 +59,10 @@ public class RootController(ILogger<RootController> logger, IConfiguration confi
     private async Task<(bool Success, ICollection<string> logs)> ConvertAsync(string inputFile, string outputFile)
     {
         using var p = new Process();
-        string options = ToCommandLineArguments(configuration.GetSection("ConversionOptions").AsEnumerable());
         p.StartInfo = new ProcessStartInfo
         {
             FileName = "pdf2htmlEX",
-            Arguments = $"{options} --dest-dir={Path.GetDirectoryName(outputFile)} {inputFile} {Path.GetFileName(outputFile)}",
+            Arguments = $"{conversionOptions.CommandLineArguments} --dest-dir={Path.GetDirectoryName(outputFile)} {inputFile} {Path.GetFileName(outputFile)}",
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
@@ -90,14 +91,6 @@ public class RootController(ILogger<RootController> logger, IConfiguration confi
         await p.WaitForExitAsync();
         return (p.ExitCode == 0, logs);
     }
-
-    internal static string ToCommandLineArguments(IEnumerable<KeyValuePair<string, string?>> options) =>
-        string.Join(' ', options.Where(kvp => kvp.Value != null).Select(kvp => $"--{ToKebabCase(kvp.Key.Replace("ConversionOptions:", ""))}={ValueToString(kvp.Value!)}"));
-
-    private static string ValueToString(string value) => bool.TryParse(value, out var boolValue) ? (boolValue ? "1" : "0") : value;
-
-    private static string ToKebabCase(string value) =>
-        Regex.Replace(value, "(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z0-9])", "-$1", RegexOptions.Compiled).Trim().ToLower();
 
     private static string FormatToMb(long bytesLength) => (bytesLength / 1024.0 / 1024.0).ToString("0.00 MB");
 }
