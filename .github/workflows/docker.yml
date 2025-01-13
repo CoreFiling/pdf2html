@@ -27,7 +27,7 @@ jobs:
         with:
           dotnet-version: "8.x"
       - name: Unit tests
-        run: dotnet test --filter "FullyQualifiedName=Unit.Tests"
+        run: dotnet test tests/Unit.Tests/Unit.Tests.csproj
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -41,7 +41,7 @@ jobs:
       - name: E2E tests
         run: |
           docker run --rm --detach -p 8080:8080 --name pdf2html ${{ env.TEST_TAG }}
-          dotnet test --filter "FullyQualifiedName=E2E.Tests"
+          dotnet test tests/E2E.Tests/E2E.Tests.csproj
           docker stop pdf2html
       - if: github.ref_name == 'main' || github.ref_type == 'tag'
         name: Login to Docker Hub
