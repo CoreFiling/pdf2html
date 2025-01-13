@@ -1,21 +1,17 @@
 using System.Diagnostics;
 using System.Net.Mime;
 using System.Reflection;
+
 using Microsoft.AspNetCore.Mvc;
+
+using Pdf2Html.Settings;
 
 namespace Pdf2Html.Controllers;
 
 [ApiController]
 [Route("/")]
-public class RootController : ControllerBase
+public class RootController(ILogger<RootController> logger, ConversionOptions conversionOptions) : ControllerBase
 {
-    private readonly ILogger<RootController> _logger;
-
-    public RootController(ILogger<RootController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpGet]
     public ActionResult Get()
     {
@@ -38,19 +34,19 @@ public class RootController : ControllerBase
             await using (var tempFileStream = System.IO.File.Open(inputFile, FileMode.Truncate))
             {
                 await Request.Body.CopyToAsync(tempFileStream);
-                _logger.LogInformation($"Copied {FormatToMb(new FileInfo(inputFile).Length)} to {inputFile}");
+                logger.LogInformation($"Copied {FormatToMb(new FileInfo(inputFile).Length)} to {inputFile}");
             }
 
-            _logger.LogInformation("Starting conversion...");
+            logger.LogInformation("Starting conversion...");
             var (success, logs) = await ConvertAsync(inputFile, outputFile);
 
             if (!success)
             {
-                _logger.LogError("Conversion failed");
+                logger.LogError("Conversion failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { pdf2htmlEX = new { logs } });
             }
 
-            _logger.LogInformation($"Conversion completed ({FormatToMb(new FileInfo(outputFile).Length)})");
+            logger.LogInformation($"Conversion completed ({FormatToMb(new FileInfo(outputFile).Length)})");
             return File(await System.IO.File.ReadAllBytesAsync(outputFile), MediaTypeNames.Text.Html);
         }
         finally
@@ -63,11 +59,10 @@ public class RootController : ControllerBase
     private async Task<(bool Success, ICollection<string> logs)> ConvertAsync(string inputFile, string outputFile)
     {
         using var p = new Process();
-        const string conversionOptions = "--embed-javascript=0 --process-outline=0 --printing=0 --bg-format=svg --svg-node-count-limit=100 --decompose-ligature 1 --tounicode 1";
         p.StartInfo = new ProcessStartInfo
         {
             FileName = "pdf2htmlEX",
-            Arguments = $"{conversionOptions} --dest-dir={Path.GetDirectoryName(outputFile)} {inputFile} {Path.GetFileName(outputFile)}",
+            Arguments = $"{conversionOptions.CommandLineArguments} --dest-dir={Path.GetDirectoryName(outputFile)} {inputFile} {Path.GetFileName(outputFile)}",
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
@@ -83,7 +78,7 @@ public class RootController : ControllerBase
             }
 
             logs.Add(log);
-            _logger.LogInformation(log);
+            logger.LogInformation(log);
         }
 
         p.OutputDataReceived += (_, e) => AddLog(e.Data);
@@ -97,8 +92,5 @@ public class RootController : ControllerBase
         return (p.ExitCode == 0, logs);
     }
 
-    private static string FormatToMb(long bytesLength)
-    {
-        return (bytesLength / 1024.0 / 1024.0).ToString("0.00 MB");
-    }
+    private static string FormatToMb(long bytesLength) => (bytesLength / 1024.0 / 1024.0).ToString("0.00 MB");
 }

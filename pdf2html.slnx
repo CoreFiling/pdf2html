@@ -1,0 +1,5 @@
+<Solution>
+    <Project Path="src/Pdf2Html/Pdf2Html.csproj" Type="Classic C#" />
+    <Project Path="tests/E2E.Tests/E2E.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests/Unit.Tests/Unit.Tests.csproj" Type="Classic C#" />
+</Solution>
