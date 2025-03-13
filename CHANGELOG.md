@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+* Patch memory corruption bug in `fontforge` triggered by some fonts.
+
 ## 0.2.0
 
 * Update to .net 8.
