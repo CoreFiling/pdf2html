@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+* Process PDF annotations (e.g. stamps) by default.
+
 ## 0.2.0
 
 * Update to .net 8.
