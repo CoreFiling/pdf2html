@@ -46,13 +46,15 @@ public class RootController(ILogger<RootController> logger, ConversionOptions co
                 return StatusCode(StatusCodes.Status500InternalServerError, new { pdf2htmlEX = new { logs } });
             }
 
-            logger.LogInformation($"Conversion completed ({FormatToMb(new FileInfo(outputFile).Length)})");
+            logger.LogInformation($"Conversion completed ({FormatToMb(new FileInfo(outputFile).Length)} written to {outputFile})");
             return File(await System.IO.File.ReadAllBytesAsync(outputFile), MediaTypeNames.Text.Html);
         }
         finally
         {
-            System.IO.File.Delete(inputFile);
-            System.IO.File.Delete(outputFile);
+            // TODO: make this configurable
+            logger.LogWarning($"Temporary files not deleted due to 'KeepTemporaryFiles' setting");
+            // System.IO.File.Delete(inputFile);
+            // System.IO.File.Delete(outputFile);
         }
     }
 
