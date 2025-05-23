@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+* Add optional setting to keep temporary files after processing for debugging purposes.
+
 ## 0.2.1
 
 * Process PDF annotations (e.g. stamps) by default.
