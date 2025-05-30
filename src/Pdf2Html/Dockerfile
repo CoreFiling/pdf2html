@@ -33,6 +33,7 @@ RUN patch ./poppler/glib/poppler-enums.c.template ./patches/poppler-enums.c.temp
 RUN patch ./poppler/glib/poppler-private.h ./patches/poppler-private.h.patch
 RUN ./buildScripts/buildPoppler
 RUN ./buildScripts/getFontforge
+RUN patch ./fontforge/fontforge/tottfgpos.c ./patches/fontforge-tottfgpos.c.patch
 RUN ./buildScripts/buildFontforge
 RUN ./buildScripts/buildPdf2htmlEX
 RUN ./buildScripts/installPdf2htmlEX

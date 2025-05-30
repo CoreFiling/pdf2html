@@ -3,6 +3,7 @@
 ## 0.2.2
 
 * Patch memory corruption bug due to PNG background images being the incorrect size.
+* Patch memory corruption bug in `fontforge` triggered by some fonts.
 
 ## 0.2.1
 
