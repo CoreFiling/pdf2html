@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+* Patch memory corruption bug due to PNG background images being the incorrect size.
+
 ## 0.2.1
 
 * Process PDF annotations (e.g. stamps) by default.
