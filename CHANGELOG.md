@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+* Switch to `cfl3` CFL patched fork instead of patching as part of this build.
+  * This improves support for certain font CMaps
+  * Remove `--tounicode` in favour of `--ignore-tounicode`, as `force` is no longer required.
+
 ## 0.2.2
 
 * Patch memory corruption bug due to PNG background images being the incorrect size.
