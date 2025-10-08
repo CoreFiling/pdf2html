@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1
+
+* Update to `cfl4` of CFL patched fork.
+  * Reduce unnecessary nesting of spans.
+
 ## 0.3.0
 
 * Switch to `cfl3` CFL patched fork instead of patching as part of this build.
