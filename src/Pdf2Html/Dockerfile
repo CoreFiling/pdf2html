@@ -5,7 +5,7 @@ FROM ubuntu:noble AS build-pdf2htmlex
 
 WORKDIR /source
 RUN apt update && apt install -y git patch sudo
-RUN git clone --depth=1 --branch fbfa07fdc1fd14bee2cb6f4c0f5f85e017bc6614 https://github.com/CoreFiling/pdf2htmlEX
+RUN git clone --depth=1 --branch feature/cfl-patches https://github.com/CoreFiling/pdf2htmlEX
 WORKDIR /source/pdf2htmlEX
 
 RUN ./buildScripts/buildInstallLocallyApt
